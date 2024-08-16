@@ -1,17 +1,10 @@
 const express = require("express");
-const Files = require('../models/file');
+const fileControllers = require("../controllers/fileControllers");
 var router = express.Router();
 
+router.post('/', fileControllers.createFile);
+router.get('/:id', fileControllers.getFileById);
+router.put('/:id', fileControllers.updateFileById);
+router.delete('/:id', fileControllers.deleteFileById);
 
-
-router.use(express.json());
-
-router.get('/', (req, res, next) => {
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'application/json');
-    res.json({mess:"Hello World!"});
-    return;
-});
-
-module.exports = router
-
+module.exports = router;
