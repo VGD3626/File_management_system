@@ -1,4 +1,6 @@
 const User = require('../models/user');
+const Folder = require('../models/folder');
+const File = require('../models/file');
 
 const registerUser = async (req, res) => {
   try {
@@ -76,9 +78,26 @@ const deleteUserById = async (req, res) => {
     }
   };
 
-  const getFilesandFoldersbyuserId = async(req,res) => {
-    
-  }
+  const getuserFilesandFolders = async (req, res) => {
+    try {
+      const userId = req.params.id;  // Assuming the user ID is passed as a URL parameter
+  
+      // Check if the user exists
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      // Find all folders and files associated with the user
+      const folders = await Folder.find({ owner: userId });
+      const files = await File.find({ owner: userId });
+  
+      res.status(200).json({ folders, files });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  };
+  
 
 
 module.exports = {
@@ -87,5 +106,5 @@ module.exports = {
   getUserById,
   updateUserById,
   deleteUserById,
-  getFilesandFoldersbyuserId
+  getuserFilesandFolders
 };
