@@ -6,20 +6,30 @@ const folderSchema = new Schema({
     type: String,
     required: true
   },
+
   path: {
     type: String,
     required: true
   },
+
   parentFolder: {
     type: Schema.Types.ObjectId,
     ref: 'Folder',
     default: null
   },
+
   owner: {
     type: Schema.Types.ObjectId,
     ref: 'User',
     required: true
-  }
+  },
+
+  sharedWith: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    default: []
+  }],
+
 }, {
   timestamps: true
 });
