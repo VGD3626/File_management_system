@@ -32,7 +32,14 @@ const fileSchema = new Schema ({
 
     size: {
         type: String
-    }
+    },
+
+    sharedWith: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        default: []
+    }],
+
 })
 
 var File = mongoose.model("File", fileSchema);
