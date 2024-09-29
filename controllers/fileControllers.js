@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const User = require('../models/user');
 const Folder = require('../models/folder');
 const File = require('../models/file');
+//const { handleUpload } = require('../cloudinaryService');
+const handleUpload = require('../util/cloudinary');
 
 const getFileById = async (req, res) => {
   try {
@@ -17,28 +19,59 @@ const getFileById = async (req, res) => {
 
 const createFile = async (req, res) => {
   try {
-    const { name, fileType, path, parentFolder, owner, url, size, sharedwith } = req.body;
+    const b64 = Buffer.from(req.file.buffer).toString('base64');
+    const dataURI = `data:${req.file.mimetype};base64,${b64}`;
+    const cldRes = await handleUpload(dataURI);
+    console.log(cldRes);
 
-    const ownerObjectId = owner ? mongoose.Types.ObjectId(owner) : undefined;
-    const parentFolderObjectId = parentFolder ? mongoose.Types.ObjectId(parentFolder) : undefined;
+    const { secure_url, format, bytes } = cldRes;
+    const { name, parentFolder, owner, sharedwith } = req.body;
 
-    const file = new File({ 
-      name, 
-      fileType, 
-      path, 
-      parentFolder: parentFolderObjectId, 
-      owner: ownerObjectId, 
-      url, 
-      size,
+    const ownerObjectId = owner ? new mongoose.Types.ObjectId(owner) : undefined;
+    const parentFolderObjectId = parentFolder ? new mongoose.Types.ObjectId(parentFolder) : undefined;
+
+    const newFile = new File({
+      name,
+      fileType: format,
+      path: secure_url,
+      parentFolder: parentFolderObjectId,
+      owner: ownerObjectId,
+      size: bytes.toString(),
       sharedWith: sharedwith || []
     });
-    await file.save();
-    res.status(201).json({ message: 'File created successfully', file });
+
+    await newFile.save();
+    
+    res.status(201).json({ message: 'File created successfully', file: newFile });
   } catch (error) {
-    console.log(error.message);
-    res.status(400).json({ error: error.message });
+    console.log(error);
+    res.status(500).json({ message: error.message });
   }
 };
+
+//   try {
+//     const { name, fileType, path, parentFolder, owner, url, size, sharedwith } = req.body;
+
+//     const ownerObjectId = owner ? mongoose.Types.ObjectId(owner) : undefined;
+//     const parentFolderObjectId = parentFolder ? mongoose.Types.ObjectId(parentFolder) : undefined;
+
+//     const file = new File({ 
+//       name, 
+//       fileType, 
+//       path, 
+//       parentFolder: parentFolderObjectId, 
+//       owner: ownerObjectId, 
+//       url, 
+//       size,
+//       sharedWith: sharedwith || []
+//     });
+//     await file.save();
+//     res.status(201).json({ message: 'File created successfully', file });
+//   } catch (error) {
+//     console.log(error.message);
+//     res.status(400).json({ error: error.message });
+//   }
+
 
 const updateFileById = async (req, res) => {
   try {

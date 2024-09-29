@@ -8,6 +8,6 @@ router.post('/login', userControllers.loginUser);
 router.get('/:id', userControllers.getUserById);
 router.put('/:id', userControllers.updateUserById);
 router.delete('/:id', userControllers.deleteUserById);
-router.get('/:id/file-and-folders', userControllers.getFilesandFolders);
+router.get('/:id/file-and-folders', userControllers.getuserFilesandFolders);
 
 module.exports = router;

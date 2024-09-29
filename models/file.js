@@ -22,7 +22,7 @@ const fileSchema = new Schema ({
 
     parentFolder: {
         type: ObjectId,
-        required: true
+        //required: true
     },
 
     owner: {
