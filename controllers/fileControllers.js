@@ -50,8 +50,7 @@ const updateFileById = async (req, res) => {
       const file = await File.findByIdAndUpdate(
         req.params.id,
         { 
-          name, 
-          fileType, 
+          name,           fileType, 
           path, 
           parentFolder, 
           owner: ownerObjectId, 
@@ -85,3 +84,5 @@ const updateFileById = async (req, res) => {
 
 exports.getFileById = getFileById;
 exports.createFile = createFile;
+exports.updateFileById = updateFileById;
+exports.deleteFileById = deleteFileById;

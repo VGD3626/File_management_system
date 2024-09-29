@@ -76,7 +76,7 @@ const deleteUserById = async (req, res) => {
     }
   };
 
-  const getFilesandFoldersbyuserId = async(req,res) => {
+  const getFilesandFolders = async(req,res) => {
     
   }
 
@@ -87,5 +87,5 @@ module.exports = {
   getUserById,
   updateUserById,
   deleteUserById,
-  getFilesandFoldersbyuserId
+  getFilesandFolders
 };
